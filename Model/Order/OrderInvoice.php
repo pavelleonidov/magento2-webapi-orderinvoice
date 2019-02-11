@@ -40,9 +40,11 @@ use Magento\Sales\Model\Order\InvoiceRepository;
 use Magento\Sales\Model\Order\OrderStateResolverInterface;
 use Magento\Sales\Model\Order\PaymentAdapterInterface;
 use Magento\Sales\Model\Order\Validation\InvoiceOrderInterface as InvoiceOrderValidator;
+use Magento\Sales\Model\Service\InvoiceService;
+use PavelLeonidov\WebApiOrderInvoice\Api\OrderInvoiceInterface;
 use Psr\Log\LoggerInterface;
 
-class OrderInvoice {
+class OrderInvoice implements OrderInvoiceInterface {
 	/**
 	 * @var ResourceConnection
 	 */
@@ -94,6 +96,11 @@ class OrderInvoice {
 	private $logger;
 
 	/**
+	 * @var InvoiceService
+	 */
+	private $invoiceService;
+
+	/**
 	 * InvoiceOrder constructor.
 	 * @param ResourceConnection $resourceConnection
 	 * @param OrderRepositoryInterface $orderRepository
@@ -105,6 +112,7 @@ class OrderInvoice {
 	 * @param InvoiceOrderValidator $invoiceOrderValidator
 	 * @param NotifierInterface $notifierInterface
 	 * @param LoggerInterface $logger
+	 * @param InvoiceService $invoiceService
 	 * @SuppressWarnings(PHPMD.ExcessiveParameterList)
 	 */
 	public function __construct(
@@ -117,7 +125,8 @@ class OrderInvoice {
 		InvoiceRepository $invoiceRepository,
 		InvoiceOrderValidator $invoiceOrderValidator,
 		NotifierInterface $notifierInterface,
-		LoggerInterface $logger
+		LoggerInterface $logger,
+		InvoiceService $invoiceService
 	) {
 		$this->resourceConnection = $resourceConnection;
 		$this->orderRepository = $orderRepository;
@@ -129,6 +138,7 @@ class OrderInvoice {
 		$this->invoiceOrderValidator = $invoiceOrderValidator;
 		$this->notifierInterface = $notifierInterface;
 		$this->logger = $logger;
+		$this->invoiceService = $invoiceService;
 	}
 
 	/**
@@ -139,6 +149,7 @@ class OrderInvoice {
 	 * @throws \Magento\Framework\Exception\InputException
 	 * @throws \Magento\Framework\Exception\NoSuchEntityException
 	 * @throws \DomainException
+	 * @api
 	 */
 	public function execute(
 		$orderId

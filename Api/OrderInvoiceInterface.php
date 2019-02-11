@@ -14,7 +14,8 @@ interface OrderInvoiceInterface
 {
     /**
      * @param int $orderId
-     * @return \Magento\Sales\Api\Data\InvoiceInterface
+	 * @return \Magento\Sales\Api\Data\InvoiceInterface
+	 * @api
      * @since 100.1.2
      */
     public function execute(
